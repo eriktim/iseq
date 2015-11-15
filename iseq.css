@@ -1,0 +1,48 @@
+.container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.editor {
+	display: flex;
+	height: 100%;
+}
+
+.overview {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.sequence {
+	display: flex;
+	height: 6em;
+	background: black;
+}
+
+.img_reference {
+	flex: 1;
+	background: black url('IMG_5006.JPG') no-repeat center center;
+    background-size: contain;
+}
+
+.img_current {
+	flex: 1;
+	background: black url('IMG_5086.JPG') no-repeat center center;
+    background-size: contain;
+}
+
+.frame {
+    border: red solid 0.2em;
+    position: fixed;
+}
+
+.img_detail {
+	flex: 2;
+	background: url('IMG_5086.JPG');
+}
