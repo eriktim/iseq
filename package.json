@@ -1,0 +1,23 @@
+{
+  "name": "iseq",
+  "version": "0.0.0",
+  "description": "image sequence",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gingerik/iseq.git"
+  },
+  "author": "Erik Timmers",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/gingerik/iseq/issues"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "fs": "0.0.2",
+    "path": "^0.12.7"
+  }
+}

@@ -1,0 +1,73 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor {
+  display: flex;
+  height: 100%;
+}
+
+.overview {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.sequence {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  height: 6em;
+  background: black;
+}
+
+.sequence > img {
+  height: 100%;
+  width: auto;
+  display: inline-block;
+  margin: 0em 0.5em;
+  border: solid 2px transparent;
+}
+
+.sequence > img.done:not(.active) {
+  opacity: 0.5;
+}
+
+.sequence > img.active {
+  border-color: red;
+}
+
+.img_reference {
+  flex: 1;
+  background: black no-repeat center center;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.img_current {
+  flex: 1;
+  background: black no-repeat center center;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.frame {
+  border: red solid 0.2em;
+  position: fixed;
+}
+
+.point {
+  border: red solid 0.2em;
+  position: fixed;
+}
+
+.img_detail {
+  flex: 2;
+  cursor: pointer;
+}
