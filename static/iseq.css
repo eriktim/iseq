@@ -63,8 +63,11 @@
 }
 
 .point {
-  border: red solid 0.2em;
+  border-radius: 50%;
+  border: rgb(255, 0, 0) solid 0.2em;
   position: fixed;
+  width: 9px;
+  height: 9px;
 }
 
 .img_detail {

@@ -1,8 +1,8 @@
 (function() {
 
+  var index;
   var imageWidth = 2592;
   var imageHeight = 1944;
-  var refPoints = [[1988, 509], [79, 766], [1206, 1778]];
   var detailWidth;
   var detailHeight;
   var detailZoom = 2;
@@ -52,9 +52,6 @@
     frame.style.left = (x * currentWidth - frameWidth / 2) + 'px';
     frame.style.top = (currentTop + y * currentHeight - frameHeight / 2) + 'px';
     updateDetail();
-
-    refPoints.forEach(function(point) {
-    });
   };
 
   var createSequence = function(sequence) {
@@ -63,9 +60,13 @@
       var frame = sequence[i];
       var img = document.createElement('img');
       img.src = frame.file;
-      img.onclick = function() {
-        selectFrame(frame);
+      var createClickHandler = function(i) {
+        return function() {
+          index = i;
+          selectFrame(sequence[i]);
+        };
       };
+      img.onclick = createClickHandler(i);
       if (frame.points.length == 3 && frame.refPoints.length == 3) {
         img.className = 'done';
       }
@@ -73,7 +74,8 @@
     }
   };
 
-  var selectFrame = function(frame, index) {
+  var selectFrame = function(frame) {
+    // set sequence
     var selectedImg = document.querySelector('.sequence img.active');
     if (selectedImg) {
       selectedImg.className = selectedImg.className.replace(' active', '');
@@ -87,6 +89,26 @@
     var img = document.querySelector(
         '.sequence img:nth-of-type(' + index + ')');
     img.className = (img.className || '') + ' active';
+
+    // set reference
+    var refPointDivs = document.querySelectorAll('.img_reference .point');
+    (frame.refPoints || []).forEach(function(point, i) {
+      if (point[0] > 0 && point[1] > 0) {
+        var div = refPointDivs[i];
+        div.style.left = point[0] + 'px';
+        div.style.top = point[1] + 'px';
+      }
+    });
+
+    // set current
+    var pointDivs = document.querySelectorAll('.img_current .point');
+    (frame.points || []).forEach(function(point, i) {
+      if (point[0] > 0 && point[1] > 0) {
+        var div = pointDivs[i];
+        div.style.left = point[0] + 'px';
+        div.style.top = point[1] + 'px';
+      }
+    });
   };
 
   fetch(document.location.href + '/seq')
@@ -104,20 +126,19 @@
       createSequence(sequence);
       getSizes();
       window.addEventListener('resize', getSizes);
-      var index;
       for (var i = 1, ii = sequence.length; i < ii; i++) {
         var frame = sequence[i];
         if (frame.points.length < 3 || frame.refPoints.length < 3) {
           index = i;
-          selectFrame(frame, i);
+          selectFrame(frame);
           break;
         }
       }
       window.onkeydown = function(event) {
         if (event.keyCode == 37) {
           index--;
-          if (index < 0) {
-            index = 0;
+          if (index < 1) {
+            index = 1;
           }
         } else if (event.keyCode == 39) {
           index++;
@@ -125,7 +146,7 @@
             index = sequence.length - 1;
           }
         }
-        selectFrame(sequence[index], index);
+        selectFrame(sequence[index]);
       };
     })
     .catch(function(reason) {
