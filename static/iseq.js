@@ -3,39 +3,47 @@
   var index;
   var imageWidth = 2592;
   var imageHeight = 1944;
-  var detailWidth;
-  var detailHeight;
+  var pointToReference = function() {};
+  var pointToCurrent = function() {};
+  var pointToDetail = function() {};
+  var currentToDetail = function() {};
+  var referenceToDetail = function() {};
+  var detailToPoint = function() {};
   var detailZoom = 2;
-  var detail = document.getElementById('detail');
-  var currentWidth;
-  var currentHeight;
-  var currentTop;
-  var current = document.getElementById('current');
-  var x = 0.5;
-  var y = 0.5;
-  var ratio;
-  var frameWidth;
-  var frameHeight;
-  var frame = document.getElementById('frame');
 
-  var getSizes = function() {
-    detailWidth = detail.offsetWidth;
-    detailHeight = detail.offsetHeight;
+  var setConversionFunctions = function() {
+    var detail = document.getElementById('detail');
+    var detailWidth = detail.offsetWidth;
+    var detailHeight = detail.offsetHeight;
 
-    currentWidth = current.offsetWidth;
-    currentHeight = current.offsetHeight;
-    currentTop = current.offsetTop;
+    var current = document.getElementById('current');
+    var currentWidth = current.offsetWidth;
+    var currentHeight = current.offsetHeight;
+    var currentTop = current.offsetTop;
 
+    var frame = document.getElementById('frame');
     var ratioX = currentWidth / (detailZoom * imageWidth);
     var ratioY = currentHeight / (detailZoom * imageHeight);
     var ratio = Math.min(ratioX, ratioY);
-    frameWidth = detailWidth * ratio;
-    frameHeight = detailHeight * ratio;
 
-    setFrame();
+    var frameWidth = detailWidth * ratio;
+    var frameHeight = detailHeight * ratio;
+
+    var r = ratio * detailZoom;
+    var offsetX = (currentWidth - imageWidth * r) / 2;
+    var offsetY = (currentHeight - imageHeight * r) / 2;
+    pointToReference = function(point) {
+      return [point[0] * r + offsetX, point[1] * r + offsetY];
+    };
+
+    pointToCurrent = function(point) {
+      return [point[0] * r + offsetX, currentTop + point[1] * r + offsetY];
+    };
+
+    //setFrame();
   };
 
-  var updateDetail = function() {
+  /*var updateDetail = function() {
     detail.style.backgroundSize = (detailZoom * imageWidth) + 'px ' +
         (detailZoom * imageHeight) + 'px';
     detail.style.backgroundPositionX =
@@ -52,7 +60,7 @@
     frame.style.left = (x * currentWidth - frameWidth / 2) + 'px';
     frame.style.top = (currentTop + y * currentHeight - frameHeight / 2) + 'px';
     updateDetail();
-  };
+  };*/
 
   var createSequence = function(sequence) {
     var container = document.querySelector('.sequence');
@@ -95,8 +103,9 @@
     (frame.refPoints || []).forEach(function(point, i) {
       if (point[0] > 0 && point[1] > 0) {
         var div = refPointDivs[i];
-        div.style.left = point[0] + 'px';
-        div.style.top = point[1] + 'px';
+        var p = pointToReference(point);
+        div.style.left = p[0] + 'px';
+        div.style.top = p[1] + 'px';
       }
     });
 
@@ -105,8 +114,9 @@
     (frame.points || []).forEach(function(point, i) {
       if (point[0] > 0 && point[1] > 0) {
         var div = pointDivs[i];
-        div.style.left = point[0] + 'px';
-        div.style.top = point[1] + 'px';
+        var p = pointToCurrent(point);
+        div.style.left = p[0] + 'px';
+        div.style.top = p[1] + 'px';
       }
     });
   };
@@ -124,8 +134,8 @@
     .then(function(config) {
       var sequence = config.sequence;
       createSequence(sequence);
-      getSizes();
-      window.addEventListener('resize', getSizes);
+      setConversionFunctions();
+      window.addEventListener('resize', setConversionFunctions);
       for (var i = 1, ii = sequence.length; i < ii; i++) {
         var frame = sequence[i];
         if (frame.points.length < 3 || frame.refPoints.length < 3) {

@@ -64,10 +64,12 @@
 
 .point {
   border-radius: 50%;
-  border: rgb(255, 0, 0) solid 0.2em;
+  border: rgb(255, 0, 0) solid 3px;
   position: fixed;
   width: 9px;
   height: 9px;
+  margin-left: -5px;
+  margin-top: -5px;
 }
 
 .img_detail {
