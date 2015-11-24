@@ -3,6 +3,8 @@ var fs = require('fs');
 var path = require('path');
 
 var filePath = '/home/erik/git/timelapse/testdata/';
+var port = 3000;
+
 var app = express();
 app.disable('x-powered-by');
 
@@ -137,9 +139,25 @@ app.get('/:album/:file', function(req, res) {
   res.sendFile(req.params.file, {root: filePath + req.params.album});
 });
 
-var server = app.listen(3000, function() {
+var server;
+var protocol;
+
+try {
+  var privateKey = fs.readFileSync('/etc/letsencrypt/live/www.gingerik.nl/privkey.pem', 'utf8');
+  var certificate = fs.readFileSync('/etc/letsencrypt/live/www.gingerik.nl/cert.pem', 'utf8');
+  var credentials = {key: privateKey, cert: certificate};
+  var https = require('https');
+  server = https.createServer(credentials, app);
+  protocol = 'https:';
+} catch (e) {
+  console.warn('could not load cerficate files');
+  var http = require('http');
+  server = http.createServer(app);
+  protocol = 'http:';
+}
+
+server.listen(port, function() {
   var host = server.address().address;
   var port = server.address().port;
-
-  console.log('iseq server listening at http://%s:%s', host, port);
+  console.log('iseq server listening at ' + protocol + '//%s:%s', host, port);
 });
