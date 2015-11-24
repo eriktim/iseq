@@ -2,7 +2,7 @@ var express = require('express');
 var fs = require('fs');
 var path = require('path');
 
-var filePath = '/home/erik/git/timelapse/testdata/';
+var filePath = '/home/erik/iseq-data/';
 var port = 3000;
 
 var app = express();
@@ -143,8 +143,9 @@ var server;
 var protocol;
 
 try {
-  var privateKey = fs.readFileSync('/etc/letsencrypt/live/www.gingerik.nl/privkey.pem', 'utf8');
-  var certificate = fs.readFileSync('/etc/letsencrypt/live/www.gingerik.nl/cert.pem', 'utf8');
+  var sslPath = '/etc/letsencrypt/live/www.gingerik.nl/';
+  var privateKey = fs.readFileSync(sslPath + 'privkey.pem', 'utf8');
+  var certificate = fs.readFileSync(sslPath + 'cert.pem', 'utf8');
   var credentials = {key: privateKey, cert: certificate};
   var https = require('https');
   server = https.createServer(credentials, app);

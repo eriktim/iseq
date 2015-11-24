@@ -1,0 +1,14 @@
+[Unit]
+Description=iSeq
+
+[Service]
+ExecStart=/usr/bin/node /var/www/iseq/main.js
+Restart=always
+User=erik
+Group=ssl-cert
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/var/www/iseq
+
+[Install]
+WantedBy=multi-user.target

@@ -1,3 +1,4 @@
 #!/bin/sh
 
-rsync -av --exclude '.*' . gingerik:~/iseq/
+rsync -av --exclude '.*' . gingerik:/var/www/iseq
+ssh gingerik 'sudo iseq-restart'
